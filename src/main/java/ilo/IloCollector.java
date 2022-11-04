@@ -15,13 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class IloCollector extends Collector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IloCollector.class);
 
-    private final List<IloHttpClient> clients;
+    private final List<IloHttpClient> clients = new ArrayList<>();
     private final LoadingCache<IloHttpClient, ChassisNode> nodeCache;
 
     public IloCollector() {
@@ -30,7 +29,13 @@ public class IloCollector extends Collector {
         String hosts = System.getenv(Environment.HOSTS);
         Preconditions.checkNotNull(hosts, "ILO_HOSTS environment variable is not set");
         var servers = new HostParser().parseHosts(hosts);
-        clients = servers.stream().map(ip -> new IloHttpClient(creds, ip, refreshRate)).collect(Collectors.toList());
+        for (var ip : servers) {
+            try {
+                this.clients.add(new IloHttpClient(creds, ip, refreshRate));
+            } catch (IllegalStateException e) {
+                LOGGER.error("Cannot connect to {}", ip, e);
+            }
+        }
         nodeCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate).build(this.getCacheLoader());
         LOGGER.info("Refresh rate set to: {}", refreshRate);
         LOGGER.info("monitoring ilos: {}", servers);

@@ -114,8 +114,7 @@ public class IloHttpClient {
             HttpResponse<String> resp = client.send(req, BodyHandlers.ofString());
             LOGGER.debug("url: {}, status: {}, body: {}", sessionUrl, resp.statusCode(), resp.body());
             final Optional<String> authToken = resp.headers().firstValue("x-auth-token");
-            //return authToken.orElseThrow(() -> new IllegalStateException("No x-auth-token header found"));
-            return authToken.get();
+            return authToken.orElseThrow(() -> new IllegalStateException("No x-auth-token header found"));
         } catch (IOException e) {
             throw new IllegalStateException("Could not create session", e);
         } catch (InterruptedException e) {
