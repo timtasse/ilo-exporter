@@ -15,21 +15,21 @@ spec:
         app: ilo-exporter
     spec:
       containers:
-      - name: ilo-exporter
-        image: starfusionmz/ilo-exporter:latest
-        env:
-        - name: ilo.username
-          valueFrom: 
-            secretKeyRef:
-              name: ilo-credentials
-              key: username
-        - name: ilo.password
-          valueFrom: 
-            secretKeyRef:
-              name: ilo-credentials
-              key: password
-        - name: ilo.hosts
-          value: "192.168.2.2-4"
+        - name: ilo-exporter
+          image: starfusionmz/ilo-exporter:latest
+          env:
+            - name: ilo.username
+              valueFrom:
+                secretKeyRef:
+                  name: ilo-credentials
+                  key: username
+            - name: ilo.password
+              valueFrom:
+                secretKeyRef:
+                  name: ilo-credentials
+                  key: password
+            - name: ilo.hosts
+              value: "192.168.2.2-4"
 ---
 apiVersion: v1
 kind: Service
@@ -42,10 +42,10 @@ spec:
   selector:
     app: ilo-exporter
   ports:
-  - name: metrics # expose metrics port
-    port: 9416 # defined in gitlab chart
-    targetPort: 9416
-    protocol: TCP
+    - name: metrics # expose metrics port
+      port: 9416 # defined in gitlab chart
+      targetPort: 9416
+      protocol: TCP
 
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -56,10 +56,10 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: ilo-exporter 
+      app: ilo-exporter
   namespaceSelector:
     matchNames:
       - monitoring
   endpoints:
-  - port: metrics
-    interval: 30s
+    - port: metrics
+      interval: 30s

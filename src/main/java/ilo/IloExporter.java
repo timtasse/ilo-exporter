@@ -1,15 +1,20 @@
 package ilo;
 
+import io.prometheus.client.exporter.HTTPServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
-import io.prometheus.client.exporter.HTTPServer;
-
 public class IloExporter {
-	static final IloCollector COLLECTOR = new IloCollector().register();
 
-	public static void main(String[] args) throws IOException {
-		String port = System.getenv().getOrDefault("ilo.port", "9416");
-		System.out.println("Starting server on port: " + port);
-		new HTTPServer(Integer.parseInt(port));
-	}
+    private static final Logger LOGGER = LoggerFactory.getLogger(IloExporter.class);
+
+    public static void main(String[] args) throws IOException {
+        String port = System.getenv().getOrDefault("ilo.port", "9416");
+        LOGGER.info("Starting server on port: {}", port);
+        new IloCollector().register();
+        new HTTPServer(Integer.parseInt(port));
+    }
+
 }
