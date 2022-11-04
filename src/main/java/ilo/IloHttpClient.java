@@ -51,18 +51,7 @@ public class IloHttpClient {
         client = HttpClientBuilder.insecure();
         sessionUrl = this.baseUri.resolve("/redfish/v1/SessionService/Sessions/");
         sessionToken = createSession(sessionUrl);
-        this.responseCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate).build(this.getCacheLoader());
-    }
-
-    public CacheLoader<HttpRequest, JsonNode> getCacheLoader() {
-        return new CacheLoader<>() {
-
-            @Override
-            public JsonNode load(HttpRequest key) throws Exception {
-                return getJsonInternal(key);
-            }
-
-        };
+        this.responseCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate).build(CacheLoader.from(this::getJsonInternal));
     }
 
     public URI getSystemUri() {

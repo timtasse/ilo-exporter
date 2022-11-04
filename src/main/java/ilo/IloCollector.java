@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class IloCollector extends Collector {
 
@@ -22,6 +24,8 @@ public class IloCollector extends Collector {
 
     private final List<IloHttpClient> clients = new ArrayList<>();
     private final LoadingCache<IloHttpClient, ChassisNode> nodeCache;
+    private final ExecutorService executorService;
+
 
     public IloCollector() {
         Credentials creds = Credentials.fromEnvironment();
@@ -36,19 +40,15 @@ public class IloCollector extends Collector {
                 LOGGER.error("Cannot connect to {}", ip, e);
             }
         }
-        nodeCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate).build(this.getCacheLoader());
+        executorService = Executors.newFixedThreadPool(50);
+        nodeCache = CacheBuilder.newBuilder()
+                .refreshAfterWrite(refreshRate)
+                .initialCapacity(servers.size())
+                .concurrencyLevel(50)
+                .build(CacheLoader.asyncReloading(CacheLoader.from(IloHttpClient::getChassisNode), executorService));
         LOGGER.info("Refresh rate set to: {}", refreshRate);
         LOGGER.info("monitoring ilos: {}", servers);
         LOGGER.info("using credentials: {}", creds);
-    }
-
-    private CacheLoader<IloHttpClient, ChassisNode> getCacheLoader() {
-        return new CacheLoader<>() {
-            @Override
-            public ChassisNode load(IloHttpClient key) throws Exception {
-                return key.getChassisNode();
-            }
-        };
     }
 
     @Override
