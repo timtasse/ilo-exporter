@@ -22,12 +22,12 @@ The exporter can be run in several ways:
  
 standalone run on linux with env
 ```
-env ilo.username=... ilo.password=... ilo.hosts=.... java -jar target/ilo-exporter-jar-with-dependencies.jar
+env ILO_USERNAME=... ILO_PASSWORD=... ILO_HOSTS=.... java -jar target/ilo-exporter-jar-with-dependencies.jar
 ```
  
 docker:
 ```
-docker run -d -e ilo.username=... -e ilo.password=... -e ilo.hosts=.... starfusionmz/ilo-exporter
+docker run -d -e ILO_USERNAME=... -e ILO_PASSWORD=... -e ILO_HOSTS=.... starfusionmz/ilo-exporter
 ```
  
 kubernetes:
@@ -40,11 +40,11 @@ kubectl apply -f 	iloexporter-deployment.yaml
 The exporter is configured via environment variables:
 
 
-| variable          | description                                                                                             |
-|-------------------|---------------------------------------------------------------------------------------------------------|
-| ilo.username      | username to talk to ilo                                                                                 |
-| ilo.password      | password used to login into ilo                                                                         |
-| ilo.hosts         | comma separated list of ilo hosts. Supports sequential expansion for ipv4 addressess e.g. 192.168.1.1-3 |
-| ilo.port          | port to listen on for metrics http server. defaults to 9416                                             |
-| ilo.cache.refresh | how often the ilo cache should be refreshed. default is (PT30S)30 seconds defined in iso8601 duration   |
+| variable         | description                                                                                             |
+|------------------|---------------------------------------------------------------------------------------------------------|
+| ILO_USERNAME     | username to talk to ilo                                                                                 |
+| ILO_PASSWORD     | password used to login into ilo                                                                         |
+| ILO_HOSTS        | comma separated list of ilo hosts. Supports sequential expansion for ipv4 addressess e.g. 192.168.1.1-3 |
+| ILO_PORT         | port to listen on for metrics http server. defaults to 9416                                             |
+| ILO_CACHEREFRESH | how often the ilo cache should be refreshed. default is (PT30S)30 seconds defined in iso8601 duration   |
 

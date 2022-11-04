@@ -11,7 +11,7 @@ public class IloExporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(IloExporter.class);
 
     public static void main(String[] args) throws IOException {
-        String port = System.getenv().getOrDefault("ilo.port", "9416");
+        String port = System.getenv().getOrDefault(Environment.PORT, "9416");
         LOGGER.info("Starting server on port: {}", port);
         new IloCollector().register();
         new HTTPServer(Integer.parseInt(port));

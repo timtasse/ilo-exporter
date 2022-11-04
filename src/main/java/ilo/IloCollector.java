@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -27,9 +26,9 @@ public class IloCollector extends Collector {
 
     public IloCollector() {
         Credentials creds = Credentials.fromEnvironment();
-        Duration refreshRate = Duration.parse(System.getenv().getOrDefault("refresh.rate", "PT30s"));
-        String hosts = System.getenv("ilo.hosts");
-        Preconditions.checkNotNull(hosts, "ilo.hosts environment variable is not set");
+        Duration refreshRate = Duration.parse(System.getenv().getOrDefault(Environment.REFRESH_RATE, "PT30s"));
+        String hosts = System.getenv(Environment.HOSTS);
+        Preconditions.checkNotNull(hosts, "ILO_HOSTS environment variable is not set");
         var servers = new HostParser().parseHosts(hosts);
         clients = servers.stream().map(ip -> new IloHttpClient(creds, ip, refreshRate)).collect(Collectors.toList());
         nodeCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate).build(this.getCacheLoader());

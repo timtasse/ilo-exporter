@@ -18,17 +18,17 @@ spec:
         - name: ilo-exporter
           image: starfusionmz/ilo-exporter:latest
           env:
-            - name: ilo.username
+            - name: ILO_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: ilo-credentials
                   key: username
-            - name: ilo.password
+            - name: ILO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: ilo-credentials
                   key: password
-            - name: ilo.hosts
+            - name: ILO_HOSTS
               value: "192.168.2.2-4"
 ---
 apiVersion: v1

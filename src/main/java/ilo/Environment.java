@@ -1,9 +1,9 @@
 package ilo;
 
-public class Environment {
-    public static String USERNAME = "ilo.username";
-    public static String PASSWORD = "ilo.password";
-    public static String PORT = "ilo.port";
-    public static String HOSTS = "ilo.hosts";
-    public static String REFRESH_RATE = "ilo.refresh.rate";
+public interface Environment {
+    String USERNAME = "ILO_USERNAME";
+    String PASSWORD = "ILO_PASSWORD";
+    String PORT = "ILO_PORT";
+    String HOSTS = "ILO_HOSTS";
+    String REFRESH_RATE = "ILO_CACHEREFRESH";
 }
