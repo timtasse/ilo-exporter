@@ -72,7 +72,9 @@ public class IloCollector extends Collector {
                     fanSamples.addMetric(List.of(hostname, fanNode.getLabel()), fanNode.getValue());
                 }
                 for (TemperatureNode tempNode : node.getThermalNode().getTempuratures()) {
-                    tempSamples.addMetric(List.of(hostname, tempNode.getLabel()), tempNode.getValue());
+                    if (!tempNode.getName().isBlank()) {
+                        tempSamples.addMetric(List.of(hostname, tempNode.getLabel()), tempNode.getValue());
+                    }
                 }
                 for (ArrayController array : node.getSystemNode().getStorageNode().getArrays()) {
                     for (DiskNode disk : array.getDiskDrives()) {

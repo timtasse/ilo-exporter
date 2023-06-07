@@ -3,6 +3,8 @@ package ilo.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import ilo.Labels;
 
+import java.util.Optional;
+
 public class TemperatureNode {
     JsonNode node;
 
@@ -15,7 +17,7 @@ public class TemperatureNode {
     }
 
     public String getName() {
-        return node.get("Name").asText();
+        return Optional.ofNullable(node.get("Name")).map(JsonNode::asText).orElse("");
     }
 
     public String getLabel() {
