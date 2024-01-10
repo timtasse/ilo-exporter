@@ -23,6 +23,9 @@ public class StorageClient {
 
     public List<DiskNode> getDiskDrives(JsonNode disksJson) {
         var set = new ArrayList<DiskNode>();
+        if (disksJson.get("Members") == null) {
+            return set;
+        }
         for (JsonNode member : disksJson.get("Members")) {
             var link = member.get("@odata.id").asText();
             var diskUri = client.getBaseUri().resolve(link);
